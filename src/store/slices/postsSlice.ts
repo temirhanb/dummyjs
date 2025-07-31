@@ -47,8 +47,8 @@ export const postsSlices = createSlice({
     builder.addCase(fetchPostsThunk.fulfilled, (state, action: PayloadAction<IRequestPosts>) => {
       state.status = StatusRequest.SUCCESS;
       state.totalPosts = action.payload.total;
-      state.skipCount = action.payload.total;
-      state.posts = [...state.posts, ...action.payload.posts];
+      state.skipCount = action.payload.skip;
+      state.posts.push(...action.payload.posts);
     });
   },
 });

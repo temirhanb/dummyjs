@@ -16,7 +16,7 @@ export const Post: React.FC<IPosts> = (
 
   return (
     <Flex vertical className={"post__container"} key={id}>
-      <Flex align={'start'} justify={'start'}  className={"title__container"}>
+      <Flex align={"start"} justify={"start"} className={"title__container"}>
         <span className={"title"}>Название: </span>
         <p className={"title__label"}>{title}</p>
       </Flex>
@@ -38,7 +38,7 @@ export const Post: React.FC<IPosts> = (
         </div>
       </Flex>
       <Flex justify={"end"} align={"end"}>
-        <p className={"tags__label"}> {tags.map(item => (<span>#{item} </span>))}</p>
+        <p className={"tags__label"}> {tags.map((item, index) => (<span key={`${item}` + index}>#{item} </span>))}</p>
       </Flex>
     </Flex>
   );
