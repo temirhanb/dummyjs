@@ -1,7 +1,8 @@
 import {Flex} from "antd";
 import React from "react";
 import {type IPosts} from "../../store/slices/postsSlice";
-import {PostContainer, Title, TitleLabel} from "./style";
+import "./style/index.scss";
+import {DislikeOutlined, LikeOutlined} from "@ant-design/icons";
 
 export const Post: React.FC<IPosts> = (
   {
@@ -14,16 +15,31 @@ export const Post: React.FC<IPosts> = (
   }) => {
 
   return (
-    <Flex vertical style={PostContainer} key={id}>
-      <Flex align={'center'} style={{marginBottom:"10px"}}>
-        <span style={Title}>Название: </span>
-        <p style={TitleLabel}>{title}</p>
+    <Flex vertical className={"post__container"} key={id}>
+      <Flex align={'start'} justify={'start'}  className={"title__container"}>
+        <span className={"title"}>Название: </span>
+        <p className={"title__label"}>{title}</p>
       </Flex>
-      <span>Пост: {body}</span>
-      <span>Тэги: {tags.map(item => (<span>#{item} </span>))}</span>
-      <span>Likes:{reactions.likes}</span>
-      <span>Dislikes:{reactions.dislikes}</span>
-      <span>Просмотров: {views}</span>
+      <Flex vertical>
+        <span className={"title"}>Пост: </span>
+        <p className={"body__description"}>{body}</p>
+      </Flex>
+
+      <Flex className={"views__container"} justify={"space-between"}>
+        <span>Просмотров: {views}</span>
+        <div>
+          <Flex justify={"end"}>
+            <span className={"reaction__like"}>
+              <LikeOutlined style={{color: "green"}}/> {reactions.likes}</span>
+            <span>
+              <DislikeOutlined style={{color: "red"}}/> {reactions.dislikes}
+            </span>
+          </Flex>
+        </div>
+      </Flex>
+      <Flex justify={"end"} align={"end"}>
+        <p className={"tags__label"}> {tags.map(item => (<span>#{item} </span>))}</p>
+      </Flex>
     </Flex>
   );
 };
