@@ -1,6 +1,5 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {fetchUserThunk} from "../thunks/fetchUserThunk";
-import {filterTodosThunk} from "../thunks/filterUserThunk";
+import {createSlice, type PayloadAction} from "@reduxjs/toolkit";
+import {fetchPostsThunk} from "../thunks/fetchPostsThunk";
 import {StatusRequest} from "../../shared";
 
 export interface IPosts {
@@ -13,14 +12,25 @@ export interface IPosts {
   views: number;
 }
 
+export interface IRequestPosts {
+  limit: number
+  posts: IPosts[],
+  skip: number,
+  total: number
+}
+
 export interface IInitialState {
   posts: IPosts[];
-  status: StatusRequest;
+  status: string;
+  skipCount: number;
+  totalPosts: number;
 }
 
 const initialState = {
   posts: [] as IPosts[],
-  status: StatusRequest.LOADING
+  status: StatusRequest.LOADING,
+  skipCount: 0,
+  totalPosts: 0
 } as IInitialState;
 
 export const postsSlices = createSlice({
@@ -28,29 +38,17 @@ export const postsSlices = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(fetchUserThunk.pending, (state) => {
+    builder.addCase(fetchPostsThunk.pending, (state) => {
       state.status = StatusRequest.LOADING;
-      state.todos = [];
     });
-    builder.addCase(fetchUserThunk.rejected, (state) => {
-      state.status = StatusRequest.ERROR;
-      state.todos = [];
-    });
-    builder.addCase(fetchUserThunk.fulfilled, (state, action: PayloadAction<IUser[]>) => {
-      state.status = StatusRequest.SUCCESS;
-      state.todos = action.payload;
-    });
-
-    builder.addCase(filterTodosThunk.pending, (state) => {
-      state.status = StatusRequest.LOADING;
-
-    });
-    builder.addCase(filterTodosThunk.rejected, (state) => {
+    builder.addCase(fetchPostsThunk.rejected, (state) => {
       state.status = StatusRequest.ERROR;
     });
-    builder.addCase(filterTodosThunk.fulfilled, (state, action) => {
+    builder.addCase(fetchPostsThunk.fulfilled, (state, action: PayloadAction<IRequestPosts>) => {
       state.status = StatusRequest.SUCCESS;
-      state.todos = action.payload;
+      state.totalPosts = action.payload.total;
+      state.skipCount = action.payload.total;
+      state.posts = [...state.posts, ...action.payload.posts];
     });
   },
 });
